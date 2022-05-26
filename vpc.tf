@@ -1,9 +1,4 @@
-#provider 
-provider "aws"{
-    region = "ap-northeast-3"
-    access_key = "AKIAVQWDRLBZV44USZUC"
-    secret_key = "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"
-}
+
 
 #vpc
 resource "aws_vpc" "server1" {
