@@ -1,0 +1,40 @@
+resource "aws_lb" "lb_terraform" {
+  name               = "terraformlb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = ["sg-095952b0a264dbc97"]
+  subnets            = ["subnet-09b0ab9bcecd43b62", "subnet-04dfd08c5e2aab1d7"]
+   
+}
+resource "aws_lb_target_group" "tg_terraform" {
+  name     = "terraform-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = "vpc-0c905cebc4b6b8aba"
+}
+resource "aws_instance" "EC2-2" {
+  ami           = "ami-0d6dbe860474011f3"
+  instance_type = "t2.micro"
+  key_name = "ec2"
+   tags                         = {
+        "Name" = "instance2"
+    }
+}
+resource "aws_instance" "EC2-1" {
+  ami           = "ami-0d6dbe860474011f3"
+  instance_type = "t2.micro"
+  key_name = "ec2"
+   tags                         = {
+        "Name" = "instance1"
+    }
+}
+resource "aws_lb_target_group_attachment" "test" {
+  target_group_arn = aws_lb_target_group.tg_terraform.arn
+  target_id        = aws_instance.EC2-2.id
+  port             = 80
+}
+resource "aws_lb_target_group_attachment" "test1" {
+  target_group_arn = aws_lb_target_group.tg_terraform.arn
+  target_id        = aws_instance.EC2-1.id
+  port             = 80
+}
