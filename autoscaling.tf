@@ -1,67 +1,4 @@
-
-
-# resource "aws_lb" "lb_terraform" {
-#   name               = "terraformlb"
-#   internal           = false
-#   load_balancer_type = "application"
-#   security_groups    = ["sg-0ff4b79808f9aad48"]
-#   subnets            = ["subnet-011391cccc54f6b3f", "subnet-007016127d0721818"]
-   
-# }
-# resource "aws_lb_target_group" "tg_terraform" {
-#   name     = "terraform-tg"
-#   port     = 80
-#   protocol = "HTTP"
-#   vpc_id   = "vpc-0461ba1a1816062fd"
-# }
-# resource "aws_instance" "EC-2" {
-#   ami           = "ami-0756a1c858554433e"
-#   instance_type = "t2.micro"
-#   key_name = "shukla"
-#    tags                         = {
-#         "Name" = "instance2"
-#     }
-# }
-# resource "aws_instance" "EC2-1" {
-#   ami           = "ami-0756a1c858554433e"
-#   instance_type = "t2.micro"
-#   key_name = "shukla"
-#    tags                         = {
-#         "Name" = "instance1"
-#     }
-# }
-# resource "aws_lb_target_group_attachment" "test" {
-#   target_group_arn = aws_lb_target_group.tg_terraform.arn
-#   target_id        = aws_instance.EC-2.id
-#   port             = 80
-# }
-# resource "aws_lb_target_group_attachment" "test1" {
-#   target_group_arn = aws_lb_target_group.tg_terraform.arn
-#   target_id        = aws_instance.EC2-1.id
-#   port             = 80
-# }
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### Creating EC2 instance
+## Creating EC2 instance
 
 resource "aws_instance" "EC2" {
   ami           = "ami-0756a1c858554433e"
@@ -71,7 +8,7 @@ resource "aws_instance" "EC2" {
         "Name" = "Terraform"
     }
 }
-### Creating Security Group for EC2
+## Creating Security Group for EC2
 resource "aws_security_group" "EC2" {
   name = "terraform-example-instance"
   ingress {
@@ -87,7 +24,9 @@ resource "aws_security_group" "EC2" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-# ## Creating Launch Configuration
+
+
+## Creating Launch Configuration
 resource "aws_launch_configuration" "example" {
   image_id               = "ami-0756a1c858554433e"
   instance_type          = "t2.micro"
@@ -102,6 +41,8 @@ resource "aws_launch_configuration" "example" {
     create_before_destroy = true
   }
 }
+
+
 ## Creating AutoScaling Group
 resource "aws_autoscaling_group" "example" {
   launch_configuration = "${aws_launch_configuration.example.id}"
@@ -116,6 +57,8 @@ resource "aws_autoscaling_group" "example" {
     propagate_at_launch = true
   }
 }
+
+
 ## Security Group for ELB
 resource "aws_security_group" "elb" {
   name = "terraform-example-elb"
@@ -133,16 +76,11 @@ resource "aws_security_group" "elb" {
   }
 }
 
-
-
-# ### Creating ELB
+## Creating ELB
 resource "aws_elb" "example" {
   name = "terraform-asg-example"
 
   security_groups = ["${aws_security_group.elb.id}"]
-
-
-
   availability_zones = ["ap-south-1a"]
   health_check {
     healthy_threshold = 2
@@ -157,21 +95,15 @@ resource "aws_elb" "example" {
     instance_port = "8080"
     instance_protocol = "http"
   }
-
-
 }
-
 resource "aws_autoscalingplans_scaling_plan" "example" {
   name = "autoooo-scalinggggg"
-
   application_source {
     tag_filter {
       key    = "application"
       values = ["example"]
     }
   }
-
-
 scaling_instruction {
     max_capacity       = 5
     min_capacity       = 2
@@ -181,12 +113,27 @@ scaling_instruction {
 
     target_tracking_configuration {
       predefined_scaling_metric_specification {
-        predefined_scaling_metric_type = "ASGAverageCPUUtilization"
+        predefined_scaling_metric_type = "ASGAverageCPUUtilization"                   #cpu utilization(metric type)
       }
-
       target_value = 70
     }
   }
 }
 
  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
