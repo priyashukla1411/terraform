@@ -33,10 +33,11 @@ resource "aws_launch_configuration" "example" {
   security_groups        = ["sg-0ff4b79808f9aad48"]
   key_name               = "shukla"
   user_data = <<-EOF
-              #!/bin/bash
-              echo "Hello, World" > index.html
-              nohup busybox httpd -f -p 8080 &
-              EOF
+             #!/bin/bash
+                    sudo apt update 
+                    sudo apt install nginx -y
+                    sudo systemctl start nginx
+                    EOF
   lifecycle {
     create_before_destroy = true
   }
